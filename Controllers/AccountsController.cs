@@ -1,8 +1,6 @@
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ToDoListAPI.Dtos;
 using ToDoListAPI.Repositories;
-using ToDoListAPI.Repositories.Implementation;
 
 namespace ToDoListAPI.Controllers;
 

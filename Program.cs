@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using ToDoListAPI.Data;
+using ToDoListAPI.Repositories;
+using ToDoListAPI.Repositories.Implementation;
 using ToDoListAPI.Services;
 using ToDoListAPI.Services.Implementation;
 
@@ -20,6 +22,8 @@ builder.Services.AddDbContext<AppDbContext>(
 );
 
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Adding JWT auth service
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
@@ -39,10 +43,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
 app.MapGet("/", () => new { status = 200, message = "The server is up and running" });
 
 app.UseHttpsRedirection();
