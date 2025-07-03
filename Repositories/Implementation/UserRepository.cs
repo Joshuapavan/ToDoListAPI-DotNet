@@ -22,8 +22,8 @@ public class UserRepository(AppDbContext context, IMapper mapper, ITokenService 
         user.Username = registerDto.Username.ToLower();
 
         // Encrypting the password in Base 64
-        var passwordBytes = System.Text.Encoding.UTF8.GetBytes(registerDto.Password);
-        user.Password = System.Convert.ToBase64String(passwordBytes);
+        var passwordBytes = Encoding.UTF8.GetBytes(registerDto.Password);
+        user.Password = Convert.ToBase64String(passwordBytes);
 
         context.Users.Add(user);
         await context.SaveChangesAsync();
@@ -36,13 +36,11 @@ public class UserRepository(AppDbContext context, IMapper mapper, ITokenService 
 
     public async Task<UserDto> LoginUserAsync(LoginDto loginDto)
     {
-        var user = await context.Users.FirstOrDefaultAsync(x => x.Username == loginDto.Username.ToLower());
-
-        if (user == null) throw new Exception("Invalid user Name");
+        var user = await context.Users.FirstOrDefaultAsync(x => x.Username == loginDto.Username.ToLower()) ?? throw new Exception("Invalid user Name");
 
         // Decrypting the password from Base 64
-        var passwordBytes = System.Convert.FromBase64String(user.Password);
-        var decryptedPassword = System.Text.Encoding.UTF8.GetString(passwordBytes);
+        var passwordBytes = Convert.FromBase64String(user.Password);
+        var decryptedPassword = Encoding.UTF8.GetString(passwordBytes);
 
         if (loginDto.Password != decryptedPassword) throw new Exception("Incorrect username");
 
