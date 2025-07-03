@@ -46,6 +46,16 @@ if (app.Environment.IsDevelopment())
 app.MapGet("/", () => new { status = 200, message = "The server is up and running" });
 
 app.UseHttpsRedirection();
+// CORS 
+app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200"));
+
+// Authentication
 app.UseAuthorization();
+app.UseAuthorization();
+
 app.MapControllers();
+
+// We can seed data here.
+
+
 app.Run();
