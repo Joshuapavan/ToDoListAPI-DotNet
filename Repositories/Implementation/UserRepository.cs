@@ -1,6 +1,3 @@
-using System;
-using System.Buffers.Text;
-using System.Security.Cryptography;
 using System.Text;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +16,7 @@ public class UserRepository(AppDbContext context, IMapper mapper, ITokenService 
 
         var user = mapper.Map<User>(registerDto);
 
-        user.Username = registerDto.Username.ToLower();
+        user.UserName = registerDto.Username.ToLower();
 
         // Encrypting the password in Base 64
         var passwordBytes = Encoding.UTF8.GetBytes(registerDto.Password);
@@ -29,14 +26,14 @@ public class UserRepository(AppDbContext context, IMapper mapper, ITokenService 
         await context.SaveChangesAsync();
         return new UserDto
         {
-            Username = user.Username,
+            Username = user.UserName,
             Token = tokenService.GenerateToken(user)
         };
     }
 
     public async Task<UserDto> LoginUserAsync(LoginDto loginDto)
     {
-        var user = await context.Users.FirstOrDefaultAsync(x => x.Username == loginDto.Username.ToLower()) ?? throw new Exception("Invalid user Name");
+        var user = await context.Users.FirstOrDefaultAsync(x => x.UserName == loginDto.Username.ToLower()) ?? throw new Exception("Invalid user Name");
 
         // Decrypting the password from Base 64
         var passwordBytes = Convert.FromBase64String(user.Password);
@@ -46,7 +43,7 @@ public class UserRepository(AppDbContext context, IMapper mapper, ITokenService 
 
         return new UserDto
         {
-            Username = user.Username,
+            Username = user.UserName,
             Token = tokenService.GenerateToken(user)
         };
     }
@@ -68,7 +65,7 @@ public class UserRepository(AppDbContext context, IMapper mapper, ITokenService 
 
     private async Task<Boolean> UserExists(string username)
     {
-        return await context.Users.AnyAsync(user => user.Username == username);
+        return await context.Users.AnyAsync(user => user.UserName == username);
     }
 
 
