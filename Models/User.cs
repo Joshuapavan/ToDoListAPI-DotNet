@@ -12,5 +12,5 @@ public class User
     // Has one profile
     public Profile? UserProfile { get; set; }
     // Has many Todos
-    public ICollection<Todo> Todos { get; set; } = [];
+    public List<Todo> Todos { get; set; } = [];
 }

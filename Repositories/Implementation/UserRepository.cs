@@ -48,25 +48,14 @@ public class UserRepository(AppDbContext context, IMapper mapper, ITokenService 
         };
     }
 
-    public async Task<User> GetUSerByIdAsync(int id)
+    public async Task<List<Todo>> FetchAllUsersTodos(int userId)
     {
-        throw new NotImplementedException();
-    }
-
-    public async Task<User> GetUSerByUserNameAsync(string Username)
-    {
-        throw new NotImplementedException();
-    }
-
-    public async Task<IEnumerable<User>> GetUsersAsync()
-    {
-        throw new NotImplementedException();
+        var user = await context.Users.FirstOrDefaultAsync(x => x.Id == userId) ?? throw new Exception("User not found with Id" + userId);
+        return [.. user.Todos];
     }
 
     private async Task<Boolean> UserExists(string username)
     {
         return await context.Users.AnyAsync(user => user.UserName == username);
     }
-
-
 }
