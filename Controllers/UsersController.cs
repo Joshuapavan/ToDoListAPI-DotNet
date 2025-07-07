@@ -12,14 +12,13 @@ namespace ToDoListAPI.Controllers;
 [Authorize]
 public class UsersController(IUserRepository userRepository) : ControllerBase
 {
-    [HttpGet]
+    [HttpGet("get-todos")]
     public async Task<ActionResult<List<Todo>>> GetTodosOfCurrentUser()
     {
         return await userRepository.FetchAllUsersTodos(int.Parse(User.GetUserId()));
     }
 
-    [HttpGet]
-    [Route("/{id:int}")]
+    [HttpGet("get-todos/{id:int}")]
     public async Task<ActionResult<List<Todo>>> GetTodosOfUser(int id)
     {
         return await userRepository.FetchAllUsersTodos(id);
